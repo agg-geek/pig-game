@@ -14,6 +14,7 @@ const holdDice = document.querySelector('.btn--hold');
 let activePlayer = 0;
 let currentScore = 0;
 const totalScores = [0, 0];
+let gameActive = false;
 
 const changePlayer = function () {
 	currentScoreNodes[activePlayer].textContent = 0;
@@ -23,9 +24,11 @@ const changePlayer = function () {
 	players[activePlayer].classList.add('player--active');
 };
 
-// TODO: winning the game if player scores 100 points
 const resetGame = function () {
-	activePlayer = 1; // notice 1
+	players[activePlayer].classList.remove('player--winner');
+
+	activePlayer = 1;
+	gameActive = true;
 	changePlayer();
 
 	currentScore = 0;
@@ -41,14 +44,14 @@ const resetGame = function () {
 resetGame();
 
 rollDice.addEventListener('click', function () {
+	if (!gameActive) return;
+
 	const diceVal = Math.floor(Math.random() * 6) + 1;
 	diceImg.classList.remove('hidden');
 	diceImg.src = `images/dice-${diceVal}.png`;
 
 	if (diceVal === 1) {
 		currentScore = 0;
-		// you don't need to make the currentScoreNode text 0
-		// as it is automatically handled by changePlayer()
 		changePlayer();
 	} else {
 		currentScore += diceVal;
@@ -57,11 +60,20 @@ rollDice.addEventListener('click', function () {
 });
 
 holdDice.addEventListener('click', function () {
+	if (!gameActive) return;
+
 	totalScores[activePlayer] += currentScore;
 	currentScore = 0;
 	currentScoreNodes[activePlayer].textContent = 0;
 	totalScoreNodes[activePlayer].textContent = totalScores[activePlayer];
-	changePlayer();
+
+	if (totalScores[activePlayer] < 10) changePlayer();
+	else {
+		gameActive = false;
+		diceImg.classList.add('hidden');
+		players[activePlayer].classList.remove('player--active');
+		players[activePlayer].classList.add('player--winner');
+	}
 });
 
 newGame.addEventListener('click', resetGame);
