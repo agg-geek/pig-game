@@ -1,10 +1,19 @@
 'use strict';
 
-const players = [document.querySelector('.player--0'), document.querySelector('.player--1')];
+const players = [
+	document.querySelector('.player--0'),
+	document.querySelector('.player--1'),
+];
 
-const totalScoreNodes = [document.querySelector('#score--0'), document.querySelector('#score--1')];
+const totalScoreNodes = [
+	document.querySelector('#score--0'),
+	document.querySelector('#score--1'),
+];
 
-const currentScoreNodes = [document.querySelector('#current--0'), document.querySelector('#current--1')];
+const currentScoreNodes = [
+	document.querySelector('#current--0'),
+	document.querySelector('#current--1'),
+];
 
 const diceImg = document.querySelector('.dice');
 const newGame = document.querySelector('.btn--new');
@@ -14,10 +23,16 @@ const holdDice = document.querySelector('.btn--hold');
 let activePlayer = 0;
 let currentScore = 0;
 const totalScores = [0, 0];
+const WIN_SCORE = 20;
 let gameActive = false;
 
-const changePlayer = function () {
+const resetCurrentScore = function () {
+	currentScore = 0;
 	currentScoreNodes[activePlayer].textContent = 0;
+};
+
+const changePlayer = function () {
+	resetCurrentScore();
 	players[activePlayer].classList.remove('player--active');
 
 	activePlayer ^= 1;
@@ -27,8 +42,8 @@ const changePlayer = function () {
 const resetGame = function () {
 	players[activePlayer].classList.remove('player--winner');
 
-	activePlayer = 1;
 	gameActive = true;
+	activePlayer = 1;
 	changePlayer();
 
 	currentScore = 0;
@@ -51,7 +66,6 @@ rollDice.addEventListener('click', function () {
 	diceImg.src = `images/dice-${diceVal}.png`;
 
 	if (diceVal === 1) {
-		currentScore = 0;
 		changePlayer();
 	} else {
 		currentScore += diceVal;
@@ -63,12 +77,11 @@ holdDice.addEventListener('click', function () {
 	if (!gameActive) return;
 
 	totalScores[activePlayer] += currentScore;
-	currentScore = 0;
-	currentScoreNodes[activePlayer].textContent = 0;
 	totalScoreNodes[activePlayer].textContent = totalScores[activePlayer];
 
-	if (totalScores[activePlayer] < 10) changePlayer();
+	if (totalScores[activePlayer] < WIN_SCORE) changePlayer();
 	else {
+		resetCurrentScore();
 		gameActive = false;
 		diceImg.classList.add('hidden');
 		players[activePlayer].classList.remove('player--active');

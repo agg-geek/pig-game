@@ -1,17 +1,8 @@
-# Jonas Pig game
-
-## Learning goal
-
--   JS Fundamentals
--   DOM manipulation
-
-## Section
-
--   Section 7
+# Pig game
 
 ## Links
 
--   [Live Demo](https://agg-geek.github.io/jonas-pig-game/)
+-   [Live Demo](https://agg-geek.github.io/pig-game/)
 
 ## To-do
 
